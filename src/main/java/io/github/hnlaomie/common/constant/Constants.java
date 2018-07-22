@@ -75,7 +75,7 @@ public interface Constants {
     // 数据分隔符号
     public static final String TIME_SPLIT = " - ";
     public static final String COL_SPLIT = ",";
-    public static final String BID_DATA_SPLIT = "|";
+    public static final String BID_DATA_SPLIT = "\\|";
 
     // ip转城市映射文件
     public static final String IP_CITY_FILE = "/config/ip/city_ip_new.csv";

@@ -13,6 +13,7 @@ import io.github.hnlaomie.parser.IDataParser;
 import io.github.hnlaomie.parser.IpMap;
 import me.doubledutch.lazyjson.LazyArray;
 import me.doubledutch.lazyjson.LazyObject;
+import me.doubledutch.lazyjson.LazyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +66,15 @@ public abstract class JsonDataParser implements IDataParser {
     protected BidData loadBid(LazyObject bid, BidKeys keys, String bidId, String advId) {
         BidData bidData = new BidData();
 
-        String impId = bid.getString(keys.getImpIdKey());
-        String newAdvId = advId.length() > 0 ? advId : bid.getString(keys.getAdvIdKey());
-        Double bidFloor = bid.getDouble(keys.getBidFloorKey());
+        String impId = (bid.getType(keys.getImpIdKey()) == LazyType.STRING) ?
+                bid.getString(keys.getImpIdKey()) : Integer.toString(bid.getInt(keys.getImpIdKey()));
+
+        String tempAdvId = (bid.getType(keys.getAdvIdKey()) == LazyType.STRING) ?
+                bid.getString(keys.getAdvIdKey()) : Integer.toString(bid.getInt(keys.getAdvIdKey()));
+        String newAdvId = (advId == null) ? tempAdvId : advId;
+
+        Double bidFloor = (bid.getType(keys.getBidFloorKey()) == LazyType.STRING) ?
+                Double.parseDouble(bid.getString(keys.getBidFloorKey())) : bid.getDouble(keys.getBidFloorKey());
         bidFloor = bidFloor == null ? 0 : bidFloor * keys.getPriceMulti();
 
         bidData.setAdvId(newAdvId);
@@ -89,7 +96,7 @@ public abstract class JsonDataParser implements IDataParser {
         LazyObject root = new LazyObject(jsonContent);
         String bidId = root.getString(keys.getBidIdKey());
 
-        if (root.has(keys.getSeatListKey())) {
+        if (keys.getSeatListKey() != null) {
             LazyArray seatArray = root.getJSONArray(keys.getSeatListKey());
             for (int i = 0; i < seatArray.length(); i++) {
                 LazyObject seat = seatArray.getJSONObject(i);

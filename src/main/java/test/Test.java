@@ -4,6 +4,7 @@ import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.parser.IDataParser;
 import io.github.hnlaomie.parser.csv.ShowParser;
+import io.github.hnlaomie.parser.json.BidDsp03Parser;
 import me.doubledutch.lazyjson.LazyArray;
 import me.doubledutch.lazyjson.LazyObject;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class Test {
 
     public static void main(String[] args) {
         Test t = new Test();
-        t.csvTest();
+        t.jsonTest();
     }
 
     public void csvTest() {
@@ -74,7 +75,7 @@ public class Test {
 
     public void jsonTest() {
         String lineSeparator = System.lineSeparator();
-        String file = "/test/json/dsp03.json";
+        String file = "/data/dsp03.csv";
 
         try (InputStream in = getClass().getResourceAsStream(file);) {
             String source = new BufferedReader(new InputStreamReader(in))
@@ -82,16 +83,10 @@ public class Test {
                     .parallel()
                     .collect(Collectors.joining(lineSeparator));
 
-            LazyObject root = new LazyObject(source);
-            String id = root.getString("id");
-            LazyArray adArray = root.getJSONArray("ad");
-            for (int i = 0; i < adArray.length(); i++) {
-                LazyObject adNode = adArray.getJSONObject(i);
-                Integer advId = adNode.getInt("creative_id");
-                Double price = adNode.getDouble("max_cpm");
-                logger.info(id);
-                logger.info(advId.toString());
-                logger.info(price.toString());
+            IDataParser parser = new BidDsp03Parser();
+            List<DspLog> dataList = parser.build(Constants.TOPIC_DSP03, source);
+            for (DspLog dspLog: dataList) {
+                logger.info(dspLog.toString());
             }
 
         } catch (IOException e) {
