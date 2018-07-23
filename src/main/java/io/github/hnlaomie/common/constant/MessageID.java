@@ -21,4 +21,6 @@ public interface MessageID {
     public static final String MSG_010007 = "0x010007";
     // json数据格式不正确。
     public static final String MSG_010008 = "0x010008";
+    // 载入dsp数据解析器出错。
+    public static final String MSG_010009 = "0x010009";
 }

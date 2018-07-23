@@ -1,0 +1,44 @@
+{
+  "parsers" : [
+    {
+      "topic" : "dspc",
+      "buildClass" : "io.github.hnlaomie.parser.csv.ClickParser"
+    },
+    {
+      "topic" : "dsps",
+      "buildClass" : "io.github.hnlaomie.parser.csv.ShowParser"
+    },
+    {
+      "topic" : "dspn",
+      "buildClass" : "io.github.hnlaomie.parser.csv.WinParser"
+    },
+    {
+      "topic" : "dsp03",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp03Parser"
+    },
+    {
+      "topic" : "dsp07",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp07Parser"
+    },
+    {
+      "topic" : "dsp13",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp13Parser"
+    },
+    {
+      "topic" : "dsp18",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp18Parser"
+    },
+    {
+      "topic" : "dsp19",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp19Parser"
+    },
+    {
+      "topic" : "dsp31",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp31Parser"
+    },
+    {
+      "topic" : "dsp32",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp32Parser"
+    }
+  ]
+}

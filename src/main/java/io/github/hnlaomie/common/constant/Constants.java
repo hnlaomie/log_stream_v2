@@ -59,6 +59,7 @@ public interface Constants {
     public static final String TOPIC_DSP07 = "dsp07";
     public static final String TOPIC_DSP13 = "dsp13";
     public static final String TOPIC_DSP18 = "dsp18";
+    public static final String TOPIC_DSP19 = "dsp19";
     public static final String TOPIC_DSP31 = "dsp31";
     public static final String TOPIC_DSP32 = "dsp32";
 
