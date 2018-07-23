@@ -18,18 +18,29 @@ import java.util.stream.Collectors;
  * @author <a href="mailto:lichunhui@adwo.com">李春辉</a>
  * @date 2018-07-23
  */
-public class DspParserLoader {
-    public static DspConfig load() {
-        DspConfig dspConfig = new DspConfig();
+public class ConfigLoader {
 
-        String configFile = "/config/parser/dsp.json";
+    public static String loadConfigContent(String configFile) {
+        String content = "";
         String lineSeparator = System.lineSeparator();
-        try (InputStream in = DspParserLoader.class.getClass().getResourceAsStream(configFile);) {
-            String content = new BufferedReader(new InputStreamReader(in))
+        try (InputStream in = ConfigLoader.class.getClass().getResourceAsStream(configFile);) {
+            content = new BufferedReader(new InputStreamReader(in))
                     .lines()
                     .parallel()
                     .collect(Collectors.joining(lineSeparator));
+        }  catch (IOException e) {
+            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+            throw exp;
+        }
+        return content;
+    }
 
+    public static DspConfig loadDspConfig() {
+        DspConfig dspConfig = new DspConfig();
+
+        String configFile = "/config/parser/dsp.json";
+        try {
+            String content = loadConfigContent(configFile);
             LazyObject root = new LazyObject(content);
             LazyArray parserArray = root.getJSONArray("parsers");
             for (int i = 0; i < parserArray.length(); i++) {
@@ -41,12 +52,16 @@ public class DspParserLoader {
                 config.setBuildClass(buildClass);
                 dspConfig.getParserList().add(config);
             }
-
-        }  catch (IOException e) {
+        }  catch (LogException e) {
+            throw e;
+        } catch (Exception e) {
             LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
             throw exp;
         }
 
         return dspConfig;
     }
+
+
 }
+

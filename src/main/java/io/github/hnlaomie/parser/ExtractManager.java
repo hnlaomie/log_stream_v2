@@ -7,8 +7,9 @@ import io.github.hnlaomie.common.util.exception.LogException;
 import io.github.hnlaomie.data.DspConfig;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.data.ParserConfig;
-import io.github.hnlaomie.parser.csv.ClickParser;
-import io.github.hnlaomie.parser.csv.CsvDataParser;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +24,14 @@ public final class ExtractManager {
     private static ExtractManager manager = null;
     // 各主题解析器
     private Map<String, IDataParser> parserMap = new HashMap<>();
+    // avro schema
+    private Schema schema = null;
 
-    public synchronized static ExtractManager getInstance() throws Exception {
+    public synchronized static ExtractManager getInstance() {
         if (manager == null) {
             manager = new ExtractManager();
             manager.loadParser();
+            manager.loadAvroSchema();
         }
         return manager;
     }
@@ -36,7 +40,7 @@ public final class ExtractManager {
      * 从配置文件生成相关主题的解析器
      */
     private void loadParser() {
-        DspConfig dspConfig = DspParserLoader.load();
+        DspConfig dspConfig = ConfigLoader.loadDspConfig();
         try {
             for (ParserConfig config : dspConfig.getParserList()) {
                 String topic = config.getTopic();
@@ -48,6 +52,20 @@ public final class ExtractManager {
             LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
             throw exp;
         }
+    }
+
+    /**
+     * 载入avro schema
+     */
+    private void loadAvroSchema() {
+        /*
+        Schema schema = new Schema.Parser().parse(
+        getClass().getResourceAsStream("/avro/io/confluent/examples/streams/wikifeed.avsc"));
+         */
+        String configFile = "/config/avro/dsplogs_schema.avsc";
+        String content = ConfigLoader.loadConfigContent(configFile);
+        Schema.Parser parser = new Schema.Parser();
+        this.schema = parser.parse(content);
     }
 
     /**
@@ -63,6 +81,31 @@ public final class ExtractManager {
             logList = parser.build(topic, content);
         }
         return logList;
+    }
+
+    public GenericRecord getRecord(DspLog dspLog) {
+        GenericRecord avroRecord = new GenericData.Record(schema);
+        avroRecord.put("log_date", dspLog.getLogDate());
+        avroRecord.put("log_hour", dspLog.getLogHour());
+        avroRecord.put("bid_id", dspLog.getBidId());
+        avroRecord.put("log_type", dspLog.getLogType());
+        avroRecord.put("exchange_id", dspLog.getExchangeId());
+        avroRecord.put("log_time", dspLog.getLogTime());
+        avroRecord.put("save_time", dspLog.getSaveTime());
+        avroRecord.put("log_status", dspLog.getEffective());
+        avroRecord.put("adv_id", dspLog.getAdvId());
+        avroRecord.put("app_id", dspLog.getAppId());
+        avroRecord.put("city_id", dspLog.getCityId());
+        avroRecord.put("ip_range_id", dspLog.getIpRangeId());
+        avroRecord.put("ip", dspLog.getIp());
+        avroRecord.put("customer_cost", dspLog.getCustomerCost());
+        avroRecord.put("adwo_cost", dspLog.getAdwoCost());
+        avroRecord.put("user_id", dspLog.getUserId());
+        avroRecord.put("device_id", dspLog.getDeviceId());
+        avroRecord.put("device_type", dspLog.getLogDate());
+        avroRecord.put("platform_id", dspLog.getPlatformId());
+        avroRecord.put("cost_type", dspLog.getCostType());
+        return avroRecord;
     }
 
 }

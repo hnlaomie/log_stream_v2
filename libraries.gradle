@@ -10,6 +10,8 @@ ext {
     slf4jVer = '1.7.25'
 
     lazyJsonVer = '2.3.2'
+    avroVer = '1.8.2'
+    jacksonVer = '1.9.13'
 
     scala11Ver = '2.11.12'
     scalaVer = '2.12.6'
@@ -17,6 +19,7 @@ ext {
     configVer = '1.3.3'
 
     kafkaVer = '1.1.1'
+    confluentVer = '4.1.1'
 
     libraries = [
         commonsIo: "commons-io:commons-io:${commonsIoVer}@jar",
@@ -42,7 +45,15 @@ ext {
         config: "com.typesafe:config:${configVer}",
 
         kafkaStreams: "org.apache.kafka:kafka-streams:${kafkaVer}",
-        kafkaClients: "org.apache.kafka:kafka-clients:${kafkaVer}@jar"
+        kafkaClients: "org.apache.kafka:kafka-clients:${kafkaVer}@jar",
+        avroSerde: "io.confluent:kafka-streams-avro-serde:${confluentVer}@jar",
+        schemaRegistryClient: "io.confluent:kafka-schema-registry-client:${confluentVer}@jar",
+        avroSerializer: "io.confluent:kafka-avro-serializer:${confluentVer}@jar",
+        commonConfig: "io.confluent:common-config:${confluentVer}@jar",
+        commonUtils: "io.confluent:common-utils:${confluentVer}@jar",
 
+        jacksonCoreAsl: "org.codehaus.jackson:jackson-core-asl:${jacksonVer}@jar",
+        jacksonMapperAsl: "org.codehaus.jackson:jackson-mapper-asl:${jacksonVer}@jar",
+        avro: "org.apache.avro:avro:${avroVer}@jar"
     ]
 }

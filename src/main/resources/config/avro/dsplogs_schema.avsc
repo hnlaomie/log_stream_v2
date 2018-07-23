@@ -1,0 +1,27 @@
+{
+  "namespace": "io.github.hnlaomie.kafka",
+  "name": "dsplog_value",
+  "type": "record",
+  "fields" : [
+    {"name" : "log_date", "type" : "string"},
+    {"name" : "log_hour", "type" : "string"},
+    {"name" : "bid_id", "type" : "string"},
+    {"name" : "log_type", "type" : "string"},
+    {"name" : "exchange_id", "type" : "string"},
+    {"name" : "log_time", "type" : "string"},
+    {"name" : "save_time", "type" : "string"},
+    {"name" : "log_status", "type" : "string"},
+    {"name" : "adv_id", "type" : "string"},
+    {"name" : "app_id", "type" : "string"},
+    {"name" : "city_id", "type" : "string"},
+    {"name" : "ip_range_id", "type" : "string"},
+    {"name" : "ip", "type" : "string"},
+    {"name" : "customer_cost", "type" : "string"},
+    {"name" : "adwo_cost", "type" : "string"},
+    {"name" : "user_id", "type" : "string"},
+    {"name" : "device_id", "type" : "string"},
+    {"name" : "device_type", "type" : "string"},
+    {"name" : "platform_id", "type" : "string"},
+    {"name" : "cost_type", "type" : "string"}
+  ]
+}

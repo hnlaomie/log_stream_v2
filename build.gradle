@@ -16,7 +16,7 @@ apply from: 'libraries.gradle'
 
 //Get dependencies from Maven central repository
 repositories {
-    //maven{ url 'http://maven.oschina.net/content/groups/public/'}
+    maven{ url 'https://packages.confluent.io/maven/'}
     mavenCentral()
     jcenter()
     mavenLocal()
@@ -51,6 +51,17 @@ dependencies {
     compile libraries.commonsIo
 
     compile libraries.lazyJson
+
+    compile libraries.jacksonCoreAsl
+    compile libraries.jacksonMapperAsl
+    compile libraries.avro
+
+    compile libraries.kafkaStreams
+    compile libraries.avroSerde
+    compile libraries.avroSerializer
+    compile libraries.commonConfig
+    compile libraries.commonUtils
+    compile libraries.schemaRegistryClient
     
 }
 
