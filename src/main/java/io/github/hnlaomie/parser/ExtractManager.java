@@ -10,10 +10,17 @@ import io.github.hnlaomie.data.ParserConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:lichunhui@adwo.com">李春辉</a>
@@ -26,21 +33,48 @@ public final class ExtractManager {
     private Map<String, IDataParser> parserMap = new HashMap<>();
     // avro schema
     private Schema schema = null;
+    // 日志处理器
+    private static Logger logger = LoggerFactory.getLogger(Constants.APP_LOGGER);
 
     public synchronized static ExtractManager getInstance() {
         if (manager == null) {
-            manager = new ExtractManager();
-            manager.loadParser();
-            manager.loadAvroSchema();
+            synchronized (ExtractManager.class) {
+                if (manager == null) {
+                    manager = new ExtractManager();
+                    manager.loadParser();
+                    manager.loadAvroSchema();
+                }
+            }
         }
         return manager;
     }
 
     /**
-     * 从配置文件生成相关主题的解析器
+     * 载入指定资源文件的内容
+     * @param configFile
+     * @return
+     */
+    private String loadConfigContent(String configFile) {
+        String content = "";
+        String lineSeparator = System.lineSeparator();
+        try (InputStream in = getClass().getResourceAsStream(configFile);) {
+            content = new BufferedReader(new InputStreamReader(in))
+                    .lines()
+                    .parallel()
+                    .collect(Collectors.joining(lineSeparator));
+        }  catch (IOException e) {
+            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+            throw exp;
+        }
+        return content;
+    }
+
+    /**
+     * 从配置文件(/config/parser/dsp.json)生成相关主题的解析器
      */
     private void loadParser() {
-        DspConfig dspConfig = ConfigLoader.loadDspConfig();
+        String content = loadConfigContent(Constants.DSP_PARSER_CONFIG_FILE);
+        DspConfig dspConfig = ConfigLoader.loadDspConfig(content);
         try {
             for (ParserConfig config : dspConfig.getParserList()) {
                 String topic = config.getTopic();
@@ -52,6 +86,7 @@ public final class ExtractManager {
             LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
             throw exp;
         }
+        logger.info("成功载入dsp解析配置文件。");
     }
 
     /**
@@ -62,10 +97,10 @@ public final class ExtractManager {
         Schema schema = new Schema.Parser().parse(
         getClass().getResourceAsStream("/avro/io/confluent/examples/streams/wikifeed.avsc"));
          */
-        String configFile = "/config/avro/dsplogs_schema.avsc";
-        String content = ConfigLoader.loadConfigContent(configFile);
+        String content = loadConfigContent(Constants.AVRO_SCHEMA_FILE);
         Schema.Parser parser = new Schema.Parser();
         this.schema = parser.parse(content);
+        logger.info("成功载入avro schema。");
     }
 
     /**

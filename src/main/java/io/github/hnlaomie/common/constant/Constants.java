@@ -62,6 +62,7 @@ public interface Constants {
     public static final String TOPIC_DSP19 = "dsp19";
     public static final String TOPIC_DSP31 = "dsp31";
     public static final String TOPIC_DSP32 = "dsp32";
+    public static final String TOPIC_DSP39 = "dsp39";
 
     // exchange id
     public static final String EXCHANGE_BAIDU = "3";
@@ -71,6 +72,7 @@ public interface Constants {
     public static final String EXCHANGE_BESTV = "19";
     public static final String EXCHANGE_BDSP = "31";
     public static final String EXCHANGE_SHJT = "32";
+    public static final String EXCHANGE_DINGYUE = "39";
 
 
     // 数据分隔符号
@@ -80,5 +82,28 @@ public interface Constants {
 
     // ip转城市映射文件
     public static final String IP_CITY_FILE = "/config/ip/city_ip_new.csv";
+    // avro schema
+    public static final String AVRO_SCHEMA_FILE = "/config/avro/dsplogs_schema.avsc";
+    // dsp parser configuration file
+    public static final String DSP_PARSER_CONFIG_FILE = "/config/parser/dsp.json";
+
+    // kafka streams相关
+    public static final String APPLICATION_ID_CONFIG = "dsp-streams-v1";
+    public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.1.20:9092";
+    public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.1.20:8081";
+    public static final String AUTO_OFFSET_RESET_CONFIG = "earliest";
+    public static final String[] SOURCE_TOPICS = {
+            "dspc", "dsps", "dspn", "dsp03", "dsp07",
+            "dsp13", "dsp18", "dsp19", "dsp31", "dsp32",
+            "dsp39"
+    };
+    public static final String SINK_TOPIC = "dsplogs";
+
+    // 行最少字符
+    public static final int LINE_MIN_LENGTH = 30;
+    // 默认城市ID
+    public static final String DEFAULT_CITY_ID = "-999999";
+    // app logger
+    public static final String APP_LOGGER = "log_stream";
 
 }

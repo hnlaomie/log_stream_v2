@@ -1,14 +1,6 @@
 package io.github.hnlaomie.parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -17,8 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.github.hnlaomie.common.constant.Constants;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
+import io.github.hnlaomie.common.constant.MessageID;
+import io.github.hnlaomie.common.util.ExceptionUtil;
+import io.github.hnlaomie.common.util.exception.LogException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ip转城市ID处理类
@@ -70,6 +65,119 @@ public class IpMap implements Serializable {
 
     private static IpMap ipMap = null;
 
+    // 日志处理器
+    private static Logger logger = LoggerFactory.getLogger(Constants.APP_LOGGER);
+
+    public static IpMap getInstance() throws Exception {
+        if (ipMap == null) {
+            synchronized(IpMap.class) {
+                if (ipMap == null) {
+                    ipMap = new IpMap();
+                }
+            }
+        }
+        return ipMap;
+    }
+
+    public int getIpCityLength() {
+        return ipCityLength;
+    }
+
+    /**
+     * 根据ip获取城市ID
+     * @param ip
+     * @return
+     */
+    public String getCityId(String ip) {
+        IpData data = getIpData(ip);
+        // 默认为"-999999"
+        String result = (data == null) ? Constants.DEFAULT_CITY_ID : data.getCityId();
+        return result;
+    }
+
+    /**
+     * 获取ip所在段的开始ip,无段则返回ip的整数形式
+     * @param ip
+     * @return
+     */
+    public Long getBeginIp(String ip) {
+        // 默认给ip的整数形式
+        IpData data = getIpData(ip);
+        Long result = (data == null) ? ipToLong(ip) : data.getBeginIp();
+        return result;
+    }
+
+    /**
+     * 如果字符串包含ip则返回ip
+     *
+     * @param str
+     * @return
+     */
+    public String getIp(String str) {
+        if (str == null) {
+            return null;
+        }
+        Pattern pattern = Pattern
+                .compile("((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])");
+        Matcher matcher = pattern.matcher(str);
+
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
+    public String numToIp(long num) {
+        long[] rtn = new long[4];
+        long y = 0, x = num;
+
+        if (num > 0) {
+            for (int i = 0; i < rtn.length - 1; i++) {
+                y = x;
+                x = y % (2 << (8 * (3 - i) - 1));
+                rtn[i] = (y - x) / (2 << (8 * (3 - i) - 1));
+            }
+
+            return rtn[0] + "," + rtn[1] + "," + rtn[2] + "," + x;
+        } else {
+            return "" + num;
+        }
+
+    }
+
+    private IpMap() {
+        loadData();
+    }
+
+    private void loadFromReader(BufferedReader br) throws IOException {
+        String s = "";
+        while ((s = br.readLine()) != null) {
+            String line = s;
+            IpData ipData = lineToIpData(line);
+            // 规范的ip数据,则将数据放入ip列表
+            if (ipData != null) {
+                this.ipCityList.add(ipData);
+            }
+        }
+        this.ipCityLength = this.ipCityList.size();
+        // ip数据根据开始ip排序
+        if (this.ipCityLength > 0) {
+            Collections.sort(this.ipCityList);
+        }
+        logger.info("成功载入ip城市数据,共" + this.ipCityLength + "行。");
+    }
+
+    private void loadData() {
+        try (
+                InputStream in = getClass().getResourceAsStream(Constants.IP_CITY_FILE);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));) {
+            loadFromReader(reader);
+        }  catch (IOException e) {
+            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+            throw exp;
+        }
+    }
+
     /**
      * 行数据转化为ip数据对象
      * @param line 开始ip,结束ip,城市ID
@@ -90,68 +198,6 @@ public class IpMap implements Serializable {
         }
 
         return ipData;
-    }
-
-    /**
-     * 从文件载入ip城市数据
-     * @param file 数据文件(开始ip,结束ip,城市ID)
-     * @param code
-     * @throws IOException
-     */
-    private IpMap(File file, String code) throws IOException {
-        LineIterator it = FileUtils.lineIterator(file, code);
-
-        try {
-            while (it.hasNext()) {
-                String line = it.nextLine();
-                IpData ipData = lineToIpData(line);
-                // 规范的ip数据,则将数据放入ip列表
-                if (ipData != null) {
-                    this.ipCityList.add(ipData);
-                }
-            }
-            this.ipCityLength = this.ipCityList.size();
-            // ip数据根据开始ip排序
-            if (this.ipCityLength > 0) {
-                Collections.sort(this.ipCityList);
-            }
-        } finally {
-            it.close();
-        }
-
-    }
-
-    private IpMap(ResultSet rs) throws NumberFormatException, SQLException {
-        while (rs.next()) {
-            String line = rs.getString(1);
-            IpData ipData = lineToIpData(line);
-            // 规范的ip数据,则将数据放入ip列表
-            if (ipData != null) {
-                this.ipCityList.add(ipData);
-            }
-        }
-        this.ipCityLength = this.ipCityList.size();
-        // ip数据根据开始ip排序
-        if (this.ipCityLength > 0) {
-            Collections.sort(this.ipCityList);
-        }
-    }
-
-    private IpMap(BufferedReader br) throws IOException {
-        String s = "";
-        while ((s = br.readLine()) != null) {
-            String line = s;
-            IpData ipData = lineToIpData(line);
-            // 规范的ip数据,则将数据放入ip列表
-            if (ipData != null) {
-                this.ipCityList.add(ipData);
-            }
-        }
-        this.ipCityLength = this.ipCityList.size();
-        // ip数据根据开始ip排序
-        if (this.ipCityLength > 0) {
-            Collections.sort(this.ipCityList);
-        }
     }
 
     /**
@@ -176,43 +222,6 @@ public class IpMap implements Serializable {
             num = 0L;
 
         return num;
-    }
-
-    public synchronized static IpMap getInstance() throws Exception {
-        if (ipMap == null) {
-            URL url = IpMap.class.getClass().getResource(Constants.IP_CITY_FILE);
-            Path path = Paths.get(url.toURI());
-            ipMap = new IpMap(path.toFile(), "utf8");
-        }
-        return ipMap;
-    }
-
-    public synchronized static IpMap getInstance(File file, String code) throws IOException {
-        if (ipMap == null) {
-            ipMap = new IpMap(file, code);
-        }
-        return ipMap;
-    }
-
-    public synchronized static IpMap getInstance(BufferedReader input) throws IOException {
-        if (ipMap == null) {
-            ipMap = new IpMap(input);
-        }
-        return ipMap;
-    }
-
-    // 只有从mysql取数才是销毁之前对象再生成新对象
-    public synchronized static IpMap getInstance(ResultSet input)
-            throws IOException, NumberFormatException, SQLException {
-        ipMap = null;
-        if (ipMap == null) {
-            ipMap = new IpMap(input);
-        }
-        return ipMap;
-    }
-
-    public int getIpCityLength() {
-        return ipCityLength;
     }
 
     /**
@@ -274,68 +283,6 @@ public class IpMap implements Serializable {
         }
 
         return result;
-    }
-
-    /**
-     * 根据ip获取城市ID
-     * @param ip
-     * @return
-     */
-    public String getCityId(String ip) {
-        IpData data = getIpData(ip);
-        // 默认为"-999999"
-        String result = (data == null) ? "-999999" : data.getCityId();
-        return result;
-    }
-
-    /**
-     * 获取ip所在段的开始ip,无段则返回ip的整数形式
-     * @param ip
-     * @return
-     */
-    public Long getBeginIp(String ip) {
-        // 默认给ip的整数形式
-        IpData data = getIpData(ip);
-        Long result = (data == null) ? ipToLong(ip) : data.getBeginIp();
-        return result;
-    }
-
-    /**
-     * 如果字符串包含ip则返回ip
-     *
-     * @param str
-     * @return
-     */
-    public static String getIp(String str) {
-        if (str == null) {
-            return null;
-        }
-        Pattern pattern = Pattern
-                .compile("((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])");
-        Matcher matcher = pattern.matcher(str);
-
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
-    public static String numToIp(long num) {
-        long[] rtn = new long[4];
-        long y = 0, x = num;
-
-        if (num > 0) {
-            for (int i = 0; i < rtn.length - 1; i++) {
-                y = x;
-                x = y % (2 << (8 * (3 - i) - 1));
-                rtn[i] = (y - x) / (2 << (8 * (3 - i) - 1));
-            }
-
-            return rtn[0] + "," + rtn[1] + "," + rtn[2] + "," + x;
-        } else {
-            return "" + num;
-        }
-
     }
 
 }

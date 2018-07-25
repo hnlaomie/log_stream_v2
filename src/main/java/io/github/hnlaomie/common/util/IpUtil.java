@@ -18,9 +18,8 @@ public class IpUtil {
         try {
             ipMap = IpMap.getInstance();
         } catch (Exception e) {
-            LogException exception = new LogException(MessageID.MSG_010007);
-            Logger logger = LoggerFactory.getLogger(IpUtil.class);
-            logger.error(exception.toString());
+            LogException exp = ExceptionUtil.handle(MessageID.MSG_010007, e);
+            throw exp;
         }
         return ipMap;
     }

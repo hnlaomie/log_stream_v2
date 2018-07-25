@@ -157,7 +157,7 @@ public abstract class JsonDataParser implements IDataParser {
         List<DspLog> dataList = new ArrayList<>();
 
         // 少于30字符的窜直接忽略,不做任何处理
-        if (content != null && content.length() > 30) {
+        if (content != null && content.length() > Constants.LINE_MIN_LENGTH) {
             String[] dataArray = content.trim().split(Constants.BID_DATA_SPLIT);
 
             // 列数一致才处理，否则抛出列数不一致异常

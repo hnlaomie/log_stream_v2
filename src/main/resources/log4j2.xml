@@ -11,9 +11,11 @@
     <loggers>
         <root level="error">
             <appender-ref ref="Console"/>
+            <appender-ref ref="File"/>
         </root>
-        <logger name="test" level="debug" additivity="false">
+        <logger name="log_stream" level="debug" additivity="false">
             <appender-ref ref="Console"/>
+            <appender-ref ref="File"/>
         </logger>
     </loggers>
 </configuration>

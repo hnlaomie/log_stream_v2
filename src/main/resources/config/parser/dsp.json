@@ -39,6 +39,10 @@
     {
       "topic" : "dsp32",
       "buildClass" : "io.github.hnlaomie.parser.json.BidDsp32Parser"
+    },
+    {
+      "topic" : "dsp39",
+      "buildClass" : "io.github.hnlaomie.parser.json.BidDsp39Parser"
     }
   ]
 }

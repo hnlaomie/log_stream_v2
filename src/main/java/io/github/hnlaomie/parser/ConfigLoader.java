@@ -20,27 +20,10 @@ import java.util.stream.Collectors;
  */
 public class ConfigLoader {
 
-    public static String loadConfigContent(String configFile) {
-        String content = "";
-        String lineSeparator = System.lineSeparator();
-        try (InputStream in = ConfigLoader.class.getClass().getResourceAsStream(configFile);) {
-            content = new BufferedReader(new InputStreamReader(in))
-                    .lines()
-                    .parallel()
-                    .collect(Collectors.joining(lineSeparator));
-        }  catch (IOException e) {
-            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
-            throw exp;
-        }
-        return content;
-    }
-
-    public static DspConfig loadDspConfig() {
+    public static DspConfig loadDspConfig(String content) {
         DspConfig dspConfig = new DspConfig();
 
-        String configFile = "/config/parser/dsp.json";
         try {
-            String content = loadConfigContent(configFile);
             LazyObject root = new LazyObject(content);
             LazyArray parserArray = root.getJSONArray("parsers");
             for (int i = 0; i < parserArray.length(); i++) {

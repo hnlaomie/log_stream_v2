@@ -101,10 +101,10 @@ public abstract class CsvDataParser implements IDataParser {
         List<String> colList = new ArrayList<>();
 
         // 少于30字符的窜直接忽略,不做任何处理
-        if (content != null && content.length() > 30) {
+        if (content != null && content.length() > Constants.LINE_MIN_LENGTH) {
             // 时间分隔符索引
             int timeSplitIndex = content.indexOf(Constants.TIME_SPLIT);
-            if (timeSplitIndex > 0 && timeSplitIndex < 30) {
+            if (timeSplitIndex > 0 && timeSplitIndex < Constants.LINE_MIN_LENGTH) {
                 // 日志时间
                 String logTime = content.substring(0, timeSplitIndex).replace(',', '.');
                 // 保存时间(当前时间)

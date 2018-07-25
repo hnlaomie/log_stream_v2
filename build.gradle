@@ -33,6 +33,7 @@ sourceSets {
             include "**/*.xml"
             include "**/*.csv"
             include "**/*.json"
+            include "**/*.avsc"
         }
 
     }
@@ -48,7 +49,6 @@ dependencies {
     compile libraries.slf4jExt
 
     compile libraries.commonsLang3
-    compile libraries.commonsIo
 
     compile libraries.lazyJson
 
@@ -66,8 +66,10 @@ dependencies {
 }
 
 shadowJar {
-    //relocate 'com.google.common', 'com.adwo.com.google.common'
     zip64 true
+    manifest {
+        attributes 'Main-Class': 'io.github.hnlaomie.DspStreams'
+    }
 }
 
 task run(type: JavaExec, dependsOn: classes) {

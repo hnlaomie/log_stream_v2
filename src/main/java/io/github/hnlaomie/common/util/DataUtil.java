@@ -35,14 +35,7 @@ public class DataUtil {
             String logTime = dataList.get(2);
             String logDate = logTime.substring(0, 10);
             String logHour = logTime.substring(11, 13);
-            /*
-                    日志时间(%Y-%m-%d %H:%M:%S), 保存时间(%Y-%m-%d %H:%M:%S), 是否有效, 广告ID, app id,
-                    城市ID, ip范围ID, ip, 广告主成本(payMoney), 安沃成本(中标价格)
-            用户ID, 设备ID, 设备机型, 操作系统（2安卓, 3ios）, 成本类型（3中标, 4展示, 5点击）
-            log_time, data_list[1], data_list[18], data_list[5], data_list[17], \
-            data_list[12], ip_range_id, data_list[13], customer_cost, adwo_cost, \
-            data_list[8], data_list[24], data_list[16], data_list[21], cost_type \
-            */
+
             log.setLogDate(logDate);
             log.setLogHour(logHour);
             log.setBidId(dataList.get(4));
