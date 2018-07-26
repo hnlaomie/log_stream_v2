@@ -1,6 +1,7 @@
 package io.github.hnlaomie.common.util;
 
 import io.github.hnlaomie.common.util.exception.LogException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 异常处理类
@@ -51,6 +52,36 @@ public class ExceptionUtil {
     public static LogException handle(String errCode, String[] msgParams, Exception e) {
         LogException exp = new LogException(errCode, msgParams, e);
         return exp;
+    }
+
+    /**
+     * 生成异常的信息
+     * @param e
+     * @return
+     */
+    public static String getExceptionMessage(Exception e) {
+        String lineSeparator = System.lineSeparator();
+        String result = "";
+        if (e != null) {
+            result += e.getMessage() + lineSeparator;
+            result += StringUtils.join(e.getStackTrace(), lineSeparator);
+        }
+        return result;
+    }
+
+    /**
+     * 生成异常的信息
+     * @param t
+     * @return
+     */
+    public static String getThrowableMessage(Throwable t) {
+        String lineSeparator = System.lineSeparator();
+        String result = "";
+        if (t != null) {
+            result += t.getMessage() + lineSeparator;
+            result += StringUtils.join(t.getStackTrace(), lineSeparator);
+        }
+        return result;
     }
 
 }

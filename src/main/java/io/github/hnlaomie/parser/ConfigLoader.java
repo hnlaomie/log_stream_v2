@@ -1,18 +1,11 @@
 package io.github.hnlaomie.parser;
 
 import io.github.hnlaomie.common.constant.MessageID;
-import io.github.hnlaomie.common.util.ExceptionUtil;
-import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.SystemException;
 import io.github.hnlaomie.data.DspConfig;
 import io.github.hnlaomie.data.ParserConfig;
 import me.doubledutch.lazyjson.LazyArray;
 import me.doubledutch.lazyjson.LazyObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:lichunhui@adwo.com">李春辉</a>
@@ -35,10 +28,10 @@ public class ConfigLoader {
                 config.setBuildClass(buildClass);
                 dspConfig.getParserList().add(config);
             }
-        }  catch (LogException e) {
+        }  catch (SystemException e) {
             throw e;
         } catch (Exception e) {
-            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+            SystemException exp = new SystemException(MessageID.MSG_010009, e);
             throw exp;
         }
 

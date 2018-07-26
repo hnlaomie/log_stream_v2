@@ -1,9 +1,16 @@
 package io.github.hnlaomie;
 
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
+
 import io.github.hnlaomie.common.constant.Constants;
+import io.github.hnlaomie.common.constant.MessageID;
+import io.github.hnlaomie.common.util.ExceptionUtil;
+import io.github.hnlaomie.common.util.exception.DspDeserializationExceptionHandler;
+import io.github.hnlaomie.common.util.exception.DspProductionExceptionHandler;
+import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.SystemException;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.parser.ExtractManager;
+import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
@@ -39,11 +46,23 @@ public class DspStreams {
             @Override
             public Iterable<GenericRecord> apply(String value) {
                 List<GenericRecord> dataList = new ArrayList<>();
-                ExtractManager manager = ExtractManager.getInstance();
-                List<DspLog> logList = manager.build(topic, value);
-                for (DspLog log: logList) {
-                    GenericRecord record = manager.getRecord(log);
-                    dataList.add(record);
+                try {
+                    ExtractManager manager = ExtractManager.getInstance();
+                    List<DspLog> logList = manager.build(topic, value);
+                    for (DspLog log : logList) {
+                        GenericRecord record = manager.getRecord(log);
+                        dataList.add(record);
+                        logger.info("成功处理: " + record.toString());
+                    }
+                } catch (LogException e) {
+                    logger.error(e.getErrMessage());
+                    if (e instanceof SystemException) {
+                        throw e;
+                    }
+                } catch (Exception e) {
+                    String[] params = {value};
+                    LogException exp = ExceptionUtil.handle(MessageID.MSG_010010, params, e);
+                    logger.error(exp.toString());
                 }
                 return dataList;
             }
@@ -66,6 +85,9 @@ public class DspStreams {
         //streamsConfiguration.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://192.168.1.20:8083");
         streamsConfiguration.put("schema.registry.url", Constants.SCHEMA_REGISTRY_URL_CONFIG);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, Constants.AUTO_OFFSET_RESET_CONFIG);
+        // for exception handle
+        streamsConfiguration.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, DspDeserializationExceptionHandler.class);
+        streamsConfiguration.put(StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG, DspProductionExceptionHandler.class);
 
         final StreamsBuilder builder = new StreamsBuilder();
         // 启动stream做数据转换
@@ -76,7 +98,8 @@ public class DspStreams {
         final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
         streams.setUncaughtExceptionHandler((Thread thread, Throwable throwable) -> {
             // 异常写日志
-            logger.error(throwable.toString());
+            String errMsg = ExceptionUtil.getThrowableMessage(throwable);
+            logger.error(errMsg);
         });
 
         streams.cleanUp();

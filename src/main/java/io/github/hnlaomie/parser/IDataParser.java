@@ -1,8 +1,6 @@
 package io.github.hnlaomie.parser;
 
-import io.github.hnlaomie.common.util.exception.LogException;
 import io.github.hnlaomie.data.DspLog;
-
 import java.util.List;
 
 /**

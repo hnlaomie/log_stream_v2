@@ -30,8 +30,9 @@ public class MessageFactoryImpl implements MessageFactory {
             int length = messageParameters.length;
             for (int i = 0; i < length; i++) {
                 // 在带参数的消息中，参数用{i}的格式定义
-                String key = "\\{" + Integer.toString(i) + "\\}";
-                result = result.replaceAll(key, (String) messageParameters[i]);
+                String key = "{" + Integer.toString(i) + "}";
+                String msgParam = messageParameters[i] == null ? "" : messageParameters[i].toString();
+                result = result.replace(key, msgParam);
             }
         }
         return result;

@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 
 import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.common.constant.MessageID;
-import io.github.hnlaomie.common.util.ExceptionUtil;
-import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public class IpMap implements Serializable {
     // 日志处理器
     private static Logger logger = LoggerFactory.getLogger(Constants.APP_LOGGER);
 
-    public static IpMap getInstance() throws Exception {
+    public static IpMap getInstance() {
         if (ipMap == null) {
             synchronized(IpMap.class) {
                 if (ipMap == null) {
@@ -172,8 +171,8 @@ public class IpMap implements Serializable {
                 InputStream in = getClass().getResourceAsStream(Constants.IP_CITY_FILE);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));) {
             loadFromReader(reader);
-        }  catch (IOException e) {
-            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+        }  catch (Exception e) {
+            SystemException exp = new SystemException(MessageID.MSG_010007, e);
             throw exp;
         }
     }

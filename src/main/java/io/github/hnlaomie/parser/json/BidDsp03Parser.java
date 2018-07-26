@@ -23,6 +23,7 @@ public final class BidDsp03Parser extends JsonDataParser {
      * 获取竞标json需要处理数据的键值对象
      * @return
      */
+    @Override
     public BidKeys getBidKeys() {
         BidKeys bidKeys = new BidKeys();
 
@@ -40,6 +41,7 @@ public final class BidDsp03Parser extends JsonDataParser {
      * 获取exchange id
      * @return
      */
+    @Override
     public String getExchangeId() {
         return Constants.EXCHANGE_BAIDU;
     }

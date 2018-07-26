@@ -3,9 +3,8 @@ package io.github.hnlaomie.parser.csv;
 import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.common.constant.MessageID;
 import io.github.hnlaomie.common.util.DataUtil;
-import io.github.hnlaomie.common.util.IpUtil;
 import io.github.hnlaomie.common.util.NumberUtil;
-import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.BusinessException;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.parser.IDataParser;
 import io.github.hnlaomie.parser.IpMap;
@@ -21,7 +20,7 @@ import java.util.List;
  * CSV数据处理基类,输入CSV格式数据,清洗转换后输出最终数据对象列表
  */
 public abstract class CsvDataParser implements IDataParser {
-    private IpMap ipMap = IpUtil.getIpMap();
+    private IpMap ipMap = IpMap.getInstance();
     /**
      * 获取数据类型, 1请求，2竞标，3中标，4展示，5点击
      *
@@ -74,7 +73,7 @@ public abstract class CsvDataParser implements IDataParser {
                     // 数字列验证失败
                     if (!numValid) {
                         String[] msgParams = {Integer.toString(i), content};
-                        LogException exception = new LogException(MessageID.MSG_010006, msgParams);
+                        BusinessException exception = new BusinessException(MessageID.MSG_010006, msgParams);
                         throw exception;
                     }
                     isValid &= numValid;
@@ -83,7 +82,7 @@ public abstract class CsvDataParser implements IDataParser {
         } else {
             // 列数验证失败
             String[] msgParams = {Integer.toString(minSize), Integer.toString(dataSize), content};
-            LogException exception = new LogException(MessageID.MSG_010004, msgParams);
+            BusinessException exception = new BusinessException(MessageID.MSG_010004, msgParams);
             throw exception;
         }
 

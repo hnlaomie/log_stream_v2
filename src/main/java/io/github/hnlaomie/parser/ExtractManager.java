@@ -2,8 +2,7 @@ package io.github.hnlaomie.parser;
 
 import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.common.constant.MessageID;
-import io.github.hnlaomie.common.util.ExceptionUtil;
-import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.SystemException;
 import io.github.hnlaomie.data.DspConfig;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.data.ParserConfig;
@@ -62,8 +61,8 @@ public final class ExtractManager {
                     .lines()
                     .parallel()
                     .collect(Collectors.joining(lineSeparator));
-        }  catch (IOException e) {
-            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+        }  catch (Exception e) {
+            SystemException exp = new SystemException(MessageID.MSG_010009, e);
             throw exp;
         }
         return content;
@@ -83,7 +82,7 @@ public final class ExtractManager {
                 parserMap.put(topic, parser);
             }
         } catch (Exception e) {
-            LogException exp = ExceptionUtil.handle(MessageID.MSG_010009, e);
+            SystemException exp = new SystemException(MessageID.MSG_010009, e);
             throw exp;
         }
         logger.info("成功载入dsp解析配置文件。");
@@ -137,7 +136,7 @@ public final class ExtractManager {
         avroRecord.put("adwo_cost", dspLog.getAdwoCost());
         avroRecord.put("user_id", dspLog.getUserId());
         avroRecord.put("device_id", dspLog.getDeviceId());
-        avroRecord.put("device_type", dspLog.getLogDate());
+        avroRecord.put("device_type", dspLog.getDeviceType());
         avroRecord.put("platform_id", dspLog.getPlatformId());
         avroRecord.put("cost_type", dspLog.getCostType());
         return avroRecord;

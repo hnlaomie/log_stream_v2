@@ -4,7 +4,7 @@ import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.data.DspLog;
 import io.github.hnlaomie.parser.IDataParser;
 import io.github.hnlaomie.parser.csv.ShowParser;
-import io.github.hnlaomie.parser.json.BidDsp03Parser;
+import io.github.hnlaomie.parser.json.BidDsp07Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class Test {
     // 日志处理器
-    private static Logger logger = LoggerFactory.getLogger(Test.class);
+    private static Logger logger = LoggerFactory.getLogger(Constants.APP_LOGGER);
 
     public static void main(String[] args) {
         Test t = new Test();
@@ -73,7 +73,7 @@ public class Test {
 
     public void jsonTest() {
         String lineSeparator = System.lineSeparator();
-        String file = "/data/dsp03.csv";
+        String file = "/data/dsp07.csv";
 
         try (InputStream in = getClass().getResourceAsStream(file);) {
             String source = new BufferedReader(new InputStreamReader(in))
@@ -81,8 +81,8 @@ public class Test {
                     .parallel()
                     .collect(Collectors.joining(lineSeparator));
 
-            IDataParser parser = new BidDsp03Parser();
-            List<DspLog> dataList = parser.build(Constants.TOPIC_DSP03, source);
+            IDataParser parser = new BidDsp07Parser();
+            List<DspLog> dataList = parser.build(Constants.TOPIC_DSP07, source);
             for (DspLog dspLog: dataList) {
                 logger.info(dspLog.toString());
             }

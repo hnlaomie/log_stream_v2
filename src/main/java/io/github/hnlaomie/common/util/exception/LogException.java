@@ -12,14 +12,14 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class LogException extends LogRuntimeException {
     // 消息
-    private final Message message;
+    protected final Message message;
 
     /**
      * 生成错误消息
      * @param errCode
      * @return
      */
-    private Message initMessage(String errCode) {
+    protected Message initMessage(String errCode) {
         MessageFactory messageFactory = new MessageFactoryImpl();
         Message message = messageFactory.createMessage(errCode);
         return message;
@@ -30,7 +30,7 @@ public class LogException extends LogRuntimeException {
      * @param errCode
      * @return
      */
-    private Message initMessage(String errCode, String[] msgParams) {
+    protected Message initMessage(String errCode, String[] msgParams) {
         MessageFactory messageFactory = new MessageFactoryImpl();
         Message message = messageFactory.createMessage(errCode, msgParams);
         return message;
@@ -80,7 +80,7 @@ public class LogException extends LogRuntimeException {
 
         sb.append("err_code: " + message.getKey());
         sb.append(" err_message: ");
-        sb.append(message.getValue());
+        sb.append(message.getValue() + lineSeparator);
         if (message.getException() != null) {
             sb.append(message.getException().getMessage() + lineSeparator);
             String causeMsg = StringUtils.join(message.getException().getStackTrace(), lineSeparator);

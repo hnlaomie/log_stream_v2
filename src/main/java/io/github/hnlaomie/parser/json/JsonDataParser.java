@@ -3,9 +3,8 @@ package io.github.hnlaomie.parser.json;
 import io.github.hnlaomie.common.constant.Constants;
 import io.github.hnlaomie.common.constant.MessageID;
 import io.github.hnlaomie.common.util.DataUtil;
-import io.github.hnlaomie.common.util.IpUtil;
 import io.github.hnlaomie.common.util.NumberUtil;
-import io.github.hnlaomie.common.util.exception.LogException;
+import io.github.hnlaomie.common.util.exception.BusinessException;
 import io.github.hnlaomie.data.BidKeys;
 import io.github.hnlaomie.data.BidData;
 import io.github.hnlaomie.data.DspLog;
@@ -24,7 +23,7 @@ import java.util.List;
  * json数据处理基类,输入json格式数据,清洗转换后输出最终数据对象列表
  */
 public abstract class JsonDataParser implements IDataParser {
-    private IpMap ipMap = IpUtil.getIpMap();
+    private IpMap ipMap = IpMap.getInstance();
 
     /**
      * 获取竞标json需要处理数据的键值对象
@@ -69,9 +68,11 @@ public abstract class JsonDataParser implements IDataParser {
         String impId = (bid.getType(keys.getImpIdKey()) == LazyType.STRING) ?
                 bid.getString(keys.getImpIdKey()) : Integer.toString(bid.getInt(keys.getImpIdKey()));
 
-        String tempAdvId = (bid.getType(keys.getAdvIdKey()) == LazyType.STRING) ?
-                bid.getString(keys.getAdvIdKey()) : Integer.toString(bid.getInt(keys.getAdvIdKey()));
-        String newAdvId = (advId == null) ? tempAdvId : advId;
+        String newAdvId = advId;
+        if (newAdvId == null) {
+            newAdvId = (bid.getType(keys.getAdvIdKey()) == LazyType.STRING) ?
+                    bid.getString(keys.getAdvIdKey()) : Integer.toString(bid.getInt(keys.getAdvIdKey()));
+        }
 
         Double bidFloor = (bid.getType(keys.getBidFloorKey()) == LazyType.STRING) ?
                 Double.parseDouble(bid.getString(keys.getBidFloorKey())) : bid.getDouble(keys.getBidFloorKey());
@@ -138,7 +139,7 @@ public abstract class JsonDataParser implements IDataParser {
 
             if (!numValid) {
                 String[] msgParams = {"0", content};
-                LogException exception = new LogException(MessageID.MSG_010006, msgParams);
+                BusinessException exception = new BusinessException(MessageID.MSG_010006, msgParams);
                 throw exception;
             }
             result = true;
@@ -174,7 +175,8 @@ public abstract class JsonDataParser implements IDataParser {
                 try {
                      bidList = loadJson(jsonContent, advId);
                 } catch (Exception e) {
-                    LogException exception = new LogException(MessageID.MSG_010008);
+                    String[] params = {content};
+                    BusinessException exception = new BusinessException(MessageID.MSG_010008, params, e);
                     throw exception;
                 }
 
@@ -192,7 +194,7 @@ public abstract class JsonDataParser implements IDataParser {
             } else {
                 // 列数验证失败
                 String[] msgParams = {Integer.toString(colSize), Integer.toString(dataSize), content};
-                LogException exception = new LogException(MessageID.MSG_010004, msgParams);
+                BusinessException exception = new BusinessException(MessageID.MSG_010004, msgParams);
                 throw exception;
             }
         }

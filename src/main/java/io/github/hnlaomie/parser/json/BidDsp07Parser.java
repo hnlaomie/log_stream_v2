@@ -22,6 +22,7 @@ public final class BidDsp07Parser extends JsonDataParser {
      * 获取竞标json需要处理数据的键值对象
      * @return
      */
+    @Override
     public BidKeys getBidKeys() {
         BidKeys bidKeys = new BidKeys();
 
@@ -40,7 +41,17 @@ public final class BidDsp07Parser extends JsonDataParser {
      * 获取exchange id
      * @return
      */
+    @Override
     public String getExchangeId() {
         return Constants.EXCHANGE_XUNFEI;
+    }
+
+    /**
+     * 数据格式： 时间|ip|adv_id|json数据
+     * @return 列数
+     */
+    @Override
+    public int getColumnSize() {
+        return 4;
     }
 }
