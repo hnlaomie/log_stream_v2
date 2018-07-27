@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -126,15 +125,13 @@ public final class ExtractManager {
         avroRecord.put("exchange_id", dspLog.getExchangeId());
         avroRecord.put("log_time", dspLog.getLogTime());
         avroRecord.put("save_time", dspLog.getSaveTime());
-        avroRecord.put("log_status", dspLog.getEffective());
+        avroRecord.put("log_status", dspLog.getLogStatus());
         avroRecord.put("adv_id", dspLog.getAdvId());
         avroRecord.put("app_id", dspLog.getAppId());
         avroRecord.put("city_id", dspLog.getCityId());
-        avroRecord.put("ip_range_id", dspLog.getIpRangeId());
         avroRecord.put("ip", dspLog.getIp());
         avroRecord.put("customer_cost", dspLog.getCustomerCost());
         avroRecord.put("adwo_cost", dspLog.getAdwoCost());
-        avroRecord.put("user_id", dspLog.getUserId());
         avroRecord.put("device_id", dspLog.getDeviceId());
         avroRecord.put("device_type", dspLog.getDeviceType());
         avroRecord.put("platform_id", dspLog.getPlatformId());

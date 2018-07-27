@@ -31,7 +31,6 @@ public class DataUtil {
             log = new DspLog();
             // 默认用展示计费
             String costType = Constants.SHOW_LOG;
-            String ipRangeId = "0";
             String logTime = dataList.get(2);
             String logDate = logTime.substring(0, 10);
             String logHour = logTime.substring(11, 13);
@@ -43,15 +42,13 @@ public class DataUtil {
             log.setExchangeId(dataList.get(3));
             log.setLogTime(logTime);
             log.setSaveTime(dataList.get(1));
-            log.setEffective(dataList.get(18));
+            log.setLogStatus(dataList.get(18));
             log.setAdvId(dataList.get(5));
             log.setAppId(dataList.get(17));
             log.setCityId(dataList.get(12));
-            log.setIpRangeId(ipRangeId);
             log.setIp(dataList.get(13));
             log.setCustomerCost(dataList.get(10));
             log.setAdwoCost(dataList.get(11));
-            log.setUserId(dataList.get(8));
             log.setDeviceId(dataList.get(24));
             log.setDeviceType(dataList.get(16));
             log.setPlatformId(dataList.get(21));
@@ -73,8 +70,7 @@ public class DataUtil {
         DspLog log = new DspLog();
         // 默认用展示计费
         String costType = Constants.SHOW_LOG;
-        String ipRangeId = "0";
-        // 中标是否有效(1有效)
+        // 竞标是否有效(1有效)
         String effective = "1";
         // 广告主成本
         String customerCost = "0";
@@ -93,15 +89,13 @@ public class DataUtil {
         log.setExchangeId(exchangeId);
         log.setLogTime(logTime);
         log.setSaveTime(saveTime);
-        log.setEffective(effective);
+        log.setLogStatus(effective);
         log.setAdvId(bid.getAdvId());
         log.setAppId("");
         log.setCityId(cityId);
-        log.setIpRangeId(ipRangeId);
         log.setIp(ip);
         log.setCustomerCost(customerCost);
         log.setAdwoCost(adwoCost);
-        log.setUserId("");
         log.setDeviceId("");
         log.setDeviceType("");
         log.setPlatformId("");

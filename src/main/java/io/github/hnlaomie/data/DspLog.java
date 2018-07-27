@@ -26,24 +26,20 @@ public final class DspLog implements Serializable {
     private String logTime;
     // 保存时间(yyyy-MM-dd hh:mm:ss)
     private String saveTime;
-    // 是否有效
-    private String effective;
+    // 日志是否有效
+    private String logStatus;
     // 广告ID
     private String advId;
     // app id
     private String appId;
     // 城市ID
     private String cityId;
-    // ip范围ID
-    private String ipRangeId;
     // ip
     private String ip;
     // 广告主成本
     private String customerCost;
     // 安沃成本
     private String adwoCost;
-    // 用户ID
-    private String userId;
     // 设备ID
     private String deviceId;
     // 设备机型
@@ -109,12 +105,12 @@ public final class DspLog implements Serializable {
         this.saveTime = saveTime;
     }
 
-    public String getEffective() {
-        return effective;
+    public String getLogStatus() {
+        return logStatus;
     }
 
-    public void setEffective(String effective) {
-        this.effective = effective;
+    public void setLogStatus(String logStatus) {
+        this.logStatus = logStatus;
     }
 
     public String getAdvId() {
@@ -141,14 +137,6 @@ public final class DspLog implements Serializable {
         this.cityId = cityId;
     }
 
-    public String getIpRangeId() {
-        return ipRangeId;
-    }
-
-    public void setIpRangeId(String ipRangeId) {
-        this.ipRangeId = ipRangeId;
-    }
-
     public String getIp() {
         return ip;
     }
@@ -171,14 +159,6 @@ public final class DspLog implements Serializable {
 
     public void setAdwoCost(String adwoCost) {
         this.adwoCost = adwoCost;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getDeviceId() {

@@ -52,7 +52,7 @@ public class DspStreams {
                     for (DspLog log : logList) {
                         GenericRecord record = manager.getRecord(log);
                         dataList.add(record);
-                        logger.info("成功处理: " + record.toString());
+                        //logger.info("成功处理: " + record.toString());
                     }
                 } catch (LogException e) {
                     logger.error(e.getErrMessage());
