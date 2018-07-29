@@ -88,7 +88,7 @@ public interface Constants {
     public static final String DSP_PARSER_CONFIG_FILE = "/config/parser/dsp.json";
 
     // kafka streams相关
-    public static final String APPLICATION_ID_CONFIG = "dsp-streams-v1";
+    public static final String APPLICATION_ID_CONFIG = "dsp-streams-v2";
     //public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.1.20:9092";
     public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.11.82:9092,192.168.11.81:9092,192.168.11.83:9092";
     //public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.1.20:8081";

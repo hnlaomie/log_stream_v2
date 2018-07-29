@@ -1,6 +1,6 @@
 {
   "namespace": "io.github.hnlaomie.kafka",
-  "name": "dsplog_value",
+  "name": "dsplogs_value",
   "type": "record",
   "fields" : [
     {"name" : "log_date", "type" : "string"},
