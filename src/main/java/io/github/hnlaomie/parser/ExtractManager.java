@@ -34,7 +34,7 @@ public final class ExtractManager {
     // 日志处理器
     private static Logger logger = LoggerFactory.getLogger(Constants.APP_LOGGER);
 
-    public synchronized static ExtractManager getInstance() {
+    public static ExtractManager getInstance() {
         if (manager == null) {
             synchronized (ExtractManager.class) {
                 if (manager == null) {
