@@ -18,31 +18,10 @@ public interface Constants {
     // 版本号
     public static final long SERIAL_VERSION_ID = 1;
 
-    // 资源文件路径
-    public static final String RESOURCE_KEY = "configPath";
-
     public static final String MSG_CONFIG_FILE = "config.log_messages";
-
-    // 日志里异常标题
-    public static final String EXCEPTION_HEADER = "BI异常：";
 
     // 日期显示格式
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    // csv的json名称
-    public static final String CSV_TOPIC = "topic";
-    public static final String CSV_INPUT_SIZE = "input_size";
-    public static final String CSV_SEPARATOR = "separator";
-    public static final String CSV_INPUT = "input";
-    public static final String CSV_OUTPUT = "output";
-    public static final String CSV_COLUMNS = "columns";
-    public static final String CSV_INDEX = "index";
-    public static final String CSV_NAME = "name";
-    public static final String CSV_TYPE = "type";
-    public static final String CSV_EXPRESSION = "expression";
-
-    // csv column value type
-    public static final String TYPE_STRING = "String";
 
     // 日志类型
     public static final String REQUEST_LOG = "1";
@@ -90,19 +69,21 @@ public interface Constants {
     // kafka streams相关
     public static final String APPLICATION_ID_CONFIG = "dsp-streams-v2";
     //public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.1.20:9092";
-    public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.11.82:9092,192.168.11.81:9092,192.168.11.83:9092";
+    public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.11.61:9092,192.168.11.62:9092,192.168.11.87:9092";
     //public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.1.20:8081";
-    public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.11.82:8081";
+    public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.11.61:8091,http://192.168.11.62:8091,http://192.168.11.87:8091";
     public static final String AUTO_OFFSET_RESET_CONFIG = "earliest";
+
     public static final String[] SOURCE_TOPICS = {
             "dspc", "dsps", "dspn", "dsp03", "dsp07",
             "dsp13", "dsp18", "dsp19", "dsp31", "dsp32",
             "dsp39"
     };
+
     public static final String SINK_TOPIC = "dsplogs";
 
     // 行最少字符
-    public static final int LINE_MIN_LENGTH = 30;
+    public static final int LINE_MIN_LENGTH = 32;
     // 默认城市ID
     public static final String DEFAULT_CITY_ID = "-999999";
     // app logger

@@ -10,7 +10,7 @@ import io.github.hnlaomie.common.constant.Constants;
  *     输入格式如下:
  *     分:秒,毫秒 - exchangeid, bid(请求ID_曝光ID), 广告ID, 请求广告接口时间戳, 点击时间戳,
  *         uid, paymethod, payMoney, 展示价格, 请求接口的ip(需保存的ip),
- *         展示广告的客户ip, 展示ID, 设备机型, 程序ID, 是否重复,
+ *         展示广告的客户ip, 展示ID, 设备机型, 媒体ID(有些为 app bundle), 是否重复,
  *         广告账户ID, 广告组ID, 广告平台, 中标价格单位, 中标是否有效(1有效，2中标价格有问题，4中标价格大于广告最高价，6为超时表示无效),
  *         设备ID, 设备类型(IMEI或ifa), 广告是否还有效(到达上限), ck校验信息
  *

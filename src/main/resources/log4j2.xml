@@ -9,7 +9,7 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
             <Policies>
                 <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="50 MB" />
+                <SizeBasedTriggeringPolicy size="50000 KB" />
             </Policies>
         </RollingFile>
     </appenders>
@@ -19,6 +19,7 @@
             <appender-ref ref="roll-by-size"/>
         </root>
         <logger name="log_stream" level="info" additivity="false">
+            <appender-ref ref="Console"/>
             <appender-ref ref="roll-by-size"/>
         </logger>
     </loggers>
