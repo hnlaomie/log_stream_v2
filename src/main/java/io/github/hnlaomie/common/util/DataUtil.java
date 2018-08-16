@@ -42,7 +42,7 @@ public class DataUtil {
             log.setExchangeId(dataList.get(3));
             log.setLogTime(logTime);
             log.setSaveTime(dataList.get(1));
-            log.setLogStatus(dataList.get(18));
+            log.setLogStatus(dataList.get(23));
             log.setAdvId(dataList.get(5));
             log.setAppId(dataList.get(17));
             log.setCityId(dataList.get(12));
