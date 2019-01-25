@@ -1,0 +1,8 @@
+{
+  "parsers" : [
+    {
+      "topic" : "testdata",
+      "buildClass" : "io.github.hnlaomie.parser.csv.TestDataParser"
+    }
+  ]
+}

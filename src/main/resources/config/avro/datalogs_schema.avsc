@@ -1,0 +1,14 @@
+{
+  "namespace": "io.github.hnlaomie.kafka",
+  "name": "datalogs_value",
+  "type": "record",
+  "fields" : [
+    {"name" : "log_date", "type" : "string"},
+    {"name" : "log_hour", "type" : "string"},
+    {"name" : "log_time", "type" : "string"},
+    {"name" : "device_id", "type" : "string"},
+    {"name" : "area_id", "type" : "string"},
+    {"name" : "ip", "type" : "string"},
+    {"name" : "event_id", "type" : "string"}
+  ]
+}

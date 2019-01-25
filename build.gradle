@@ -1,0 +1,90 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
+}
+
+plugins {
+    id 'java' // or 'groovy' Must be explicitly applied
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+apply from: 'libraries.gradle'
+
+//Get dependencies from Maven central repository
+repositories {
+    maven{ url 'https://packages.confluent.io/maven/'}
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+project.buildDir = "target"
+targetCompatibility = "1.8"
+sourceCompatibility = "1.8"
+
+sourceSets {
+    main {
+        resources {
+            include "**/*.properties"
+            include "**/*.xml"
+            include "**/*.csv"
+            include "**/*.json"
+            include "**/*.avsc"
+        }
+
+    }
+}
+
+//Project dependencies
+dependencies {
+    compile libraries.log4jCore
+    compile libraries.log4jApi
+    compile libraries.log4jSlf4jImpl
+    compile libraries.slf4jApi
+    compile libraries.slf4jExt
+
+    compile libraries.commonsLang3
+
+    compile libraries.lazyJson
+
+    compile libraries.jacksonCoreAsl
+    compile libraries.jacksonMapperAsl
+    compile libraries.avro
+
+    compile libraries.kafkaStreams
+    compile libraries.avroSerde
+    compile libraries.avroSerializer
+    compile libraries.commonConfig
+    compile libraries.commonUtils
+    compile libraries.schemaRegistryClient
+    
+}
+
+shadowJar {
+    zip64 true
+    manifest {
+        attributes 'Main-Class': 'io.github.hnlaomie.DspStreams'
+    }
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+    main = 'Main'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task copyToShell(type: Copy)
+copyToShell {
+    from('target/libs')
+    into('./')
+    include('*.jar')
+}
+copyToShell.dependsOn shadowJar
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10'
+}
