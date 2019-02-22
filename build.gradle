@@ -67,7 +67,7 @@ dependencies {
 shadowJar {
     zip64 true
     manifest {
-        attributes 'Main-Class': 'io.github.hnlaomie.DspStreams'
+        attributes 'Main-Class': 'io.github.hnlaomie.DataStreams'
     }
 }
 

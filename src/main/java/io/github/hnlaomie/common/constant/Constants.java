@@ -47,9 +47,9 @@ public interface Constants {
 
     // kafka streams相关
     public static final String APPLICATION_ID_CONFIG = "data-streams-v2";
-    public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.18.8:9092";
+    public static final String BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
     //public static final String BOOTSTRAP_SERVERS_CONFIG = "192.168.11.61:9092,192.168.11.62:9092,192.168.11.87:9092";
-    public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.18.8:8081";
+    public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://localhost:8081";
     //public static final String SCHEMA_REGISTRY_URL_CONFIG = "http://192.168.11.61:8091,http://192.168.11.62:8091,http://192.168.11.87:8091";
     public static final String AUTO_OFFSET_RESET_CONFIG = "earliest";
 
